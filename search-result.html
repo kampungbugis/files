@@ -841,8 +841,13 @@ pre {
         <a href="http://kampungbugis.com//tokoh"><i class="fa fa-group"></i> Tokoh</a>
         <a href="http://kampungbugis.com//belajar-bahasa-bugis"><i class="fa fa-file-text"></i> Belajar bahasa bugis</a>
       </nav>
-      <form class="search" method="GET" action="" target="_top">
-        <input type="search" class="searchTerm data-input" placeholder="Enter your search term ..." name="googlesearch"/><input class="button button-primary searchButton" type="submit" />
+      <form class="search" method="GET" action="https://cdn.rawgit.com/kampungbugis/files/master/search-result.html" itemprop="potentialAction" itemscope="itemscope" itemtype="http://schema.org/SearchAction" target="_top">
+        <meta content='https://cdn.rawgit.com/kampungbugis/files/master/search-result.html?q={q}' itemprop='target'/>
+        <input type='hidden' name='cx' value='partner-pub-003382247757752101246:9cu0lew4lne' />
+        <input type='hidden' name='cof' value='FORID:10' />
+        <input type='hidden' name='ie' value='ISO-8859-1' />
+        <input class="searchTerm" itemprop="query-input" name='q' onblur='if(this.value==&apos;&apos;)this.value=this.defaultValue;' onfocus='if(this.value==this.defaultValue)this.value=&apos;&apos;' type='text' placeholder='Search here ...'/>
+        <input class="button button-primary searchButton" type="submit" />
       </form>
       <div class="cf"></div>
     </div>
