@@ -44,25 +44,49 @@
                 s.setAttribute('data-timestamp', +new Date());
                 (d.head || d.body).appendChild(s);
             })();
-            window.addEventListener("message", receiveMessage, false);
-            function receiveMessage(event)
-            {
-	            if (event.data) {
-		            try {
-			            JSON.parse(event.data);
-		            } catch (e) {
-			            return false;
-		            }
-		            var msg = JSON.parse(event.data);
-		            if (msg.name == 'resize') {
-			            window.parent.postMessage({
-				            sentinel: 'amp',
-				            type: 'embed-size',
-				            height: msg.data.height
-			            }, '*');
-		            }
-	            }
-            };
+		
+            (function () {
+                function checkSizeChange() {
+                    var viewportHeight = window.innerHeight;
+                    var contentHeight = document.getElementById('disqus_thread').clientHeight;
+                    if (viewportHeight !== contentHeight && contentHeight > 100) {
+                        window.parent.postMessage({
+                            sentinel: 'amp',
+                            type: 'embed-size',
+                            height: contentHeight
+                        }, '*')
+                    }
+                }
+
+                var mutationObserverAvailable = typeof window.MutationObserver === 'function';
+
+                function bindObserver() {
+                    var frame = document.getElementsByTagName('iframe')[0];
+
+                    // if the frame is not available yet try again later
+                    if (frame === null || frame === undefined) {
+                        setTimeout(bindObserver, 200);
+                        return;
+                    }
+
+                    // check the size now since the frame is now available
+                    checkSizeChange();
+
+                    var resizeObserver = new MutationObserver(checkSizeChange);
+                    resizeObserver.observe(frame, {
+                        attributes: true,
+                        attributeFilter: ['style']
+                    });
+                }
+
+                // use mutation observers to quickly change the size of the iframe
+                if (mutationObserverAvailable) {
+                    bindObserver();
+                }
+
+                // also check periodically for the size of the frame
+                setInterval(checkSizeChange, mutationObserverAvailable ? 5000 : 500);
+            })();
         </script>
     </body>
 </html>
